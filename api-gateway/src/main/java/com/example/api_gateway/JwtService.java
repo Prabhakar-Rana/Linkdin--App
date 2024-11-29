@@ -1,10 +1,8 @@
 package com.example.api_gateway;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,16 +28,27 @@ public class JwtService {
 //        return Long.valueOf(claims.getSubject());  // Get the subject (user ID) from the claims
 //    }
     public String getUserIdFromToken(String token) {
-       // try{
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSecretKey())
-                .build().parseClaimsJws(token).getBody();
-            System.out.println("temp="+claims);
-            return "val--";
-//        } catch (JwtException e){
-//            System.out.println("Invalid JWT: " + e.getMessage());
-//            return "hello";
-//        }
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(getSecretKey()) // Replace with your key retrieval logic
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
+            String var = claims.get("userId", String.class);// Remove in production
+            return claims.getSubject();
+        } catch (SignatureException ex) {
+            System.err.println("Invalid JWT signature: " + ex.getMessage());
+        } catch (MalformedJwtException ex) {
+            System.err.println("Malformed JWT: " + ex.getMessage());
+        } catch (ExpiredJwtException ex) {
+            System.err.println("JWT has expired: " + ex.getMessage());
+        } catch (UnsupportedJwtException ex) {
+            System.err.println("Unsupported JWT: " + ex.getMessage());
+        } catch (IllegalArgumentException ex) {
+            System.err.println("Illegal argument in JWT parsing: " + ex.getMessage());
+        }
+        return null; // Or throw a custom exception
     }
+
 }
