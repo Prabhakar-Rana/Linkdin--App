@@ -1,7 +1,7 @@
 
 spring.application.name: api-gateway
 
-server.port: 8080
+server.port: 8081
 
 jwt.secretKey: asdfladf98a7df89aysf8d9yasiudfha9s87dfa89syudhfa98sdfyaisuhdfa98sfy
 
@@ -31,7 +31,7 @@ spring:
           predicates:
             - Path=/api/v1/connections/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=3
             - name: AuthenticationFilter
 
 

@@ -13,6 +13,7 @@ public class ConnectionsService {
     private final ConnectionsRepository connectionsRepository;
     public List<Person> getFirstDegree(Long userId) {
         List<Person> first_degree = connectionsRepository.findByUserId(userId);
+        System.out.println(first_degree);
         return first_degree;
     }
 }
